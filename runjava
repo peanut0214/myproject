@@ -1,0 +1,80 @@
+package pensonalAcount;
+import java.util.Scanner;
+import java.io.*;
+import java.util.ArrayList;
+public class Runjava {
+
+	public static void main(String[] args) throws IOException   {
+	Date date=new Date(2008,11,1);
+	SavingAccount sa1=new SavingAccount(date,"S3755127",0.015);
+	SavingAccount sa2=new SavingAccount(date,"02342342",0.015);
+	Creditaccount ca=new Creditaccount(date,"C5392394",10000,0.0005,50);
+	Account [] accounts={sa1,sa2,ca};
+	int n=accounts.length;
+	char cmd;
+	do{
+		
+		System.out.println("(d)deposit (w)withdraw (s)show (c)change (n)next month (e)exit");
+		date.show();
+		System.out.println("\tTotal: "+Account.gettotal()+"\tcommand>");
+		int index;
+		int day;
+		double amount;
+		String desc;
+		Scanner sc=new Scanner(System.in);
+		desc=sc.nextLine();
+		cmd=desc.charAt(0);
+		switch (cmd) {
+		case 'd':
+			System.out.println("please input account's number: ");
+			index=sc.nextInt();
+			System.out.println("please input the number of money and purpose: ");
+			amount=sc.nextInt();
+			desc=sc.nextLine();
+			accounts[index].deposit(date,amount,desc);
+			break;
+		case 'w':
+			System.out.println("please input account's number: ");
+			index=sc.nextInt();
+			System.out.println("please input the number of money and purpose: ");
+			amount=sc.nextInt();
+			desc=sc.nextLine();
+			accounts[index].withdraw(date,amount,desc);
+			break;
+		case 'c':
+			System.out.println("please input the day in this month: ");
+			day=sc.nextInt();
+			if(day<date.getday())
+				System.out.println("You cannot specify a previous day");
+			else if(day>date.getMaxdays())
+				System.out.println("Invalid day");
+			else 
+				date=new Date(date.getyear(),date.getmonth(),day);
+			break;
+		case's':
+			for(int i=0;i<n;i++){
+				System.out.print("\t["+i+"]");
+				accounts[i].show();
+				System.out.println();
+			}
+			break;
+		case 'n':
+			int x=date.getmonth()%12;
+			ArrayList arr=new ArrayList(12);
+			arr.add("January");arr.add("February");arr.add("March");arr.add("April");arr.add("May");arr.add("June");arr.add("July");arr.add("August");arr.add("September");arr.add("October");arr.add("November");arr.add("December");
+			System.out.println("this is "+arr.get(x));
+			if(date.getmonth()==12)
+				date=new Date(date.getyear()+1,1,1);
+			else 
+				date=new Date(date.getyear(),date.getmonth()+1,1);
+			for(int i=0;i<n;i++) 
+				accounts[i].settle(date);
+			break;
+		default:
+			System.out.println("imput error!\nplease input again!");
+			break;
+		}
+	}while(cmd!='e');
+	}
+
+}
